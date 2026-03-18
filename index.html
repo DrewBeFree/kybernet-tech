@@ -775,8 +775,12 @@
       "text_mm1jarag": last,
       "phone_mm1jdp3f": { "phone": phone, "countryShortName": "US" },
       "email_mm1jhb2c": { "email": email, "text": email },
+<<<<<<< HEAD
       "text_mm1jzzxb": message,
       "text_mm1jrvhd": situation
+=======
+      "text_mm1jzzxb": (situation ? "Situation: " + situation + "\n\n" : "") + (message || "")
+>>>>>>> 7236a8b3a28e06b3ae3449c3556db42be283c8a2
     };
 
     const query = `mutation {
