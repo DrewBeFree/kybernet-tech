@@ -775,12 +775,8 @@
       "text_mm1jarag": last,
       "phone_mm1jdp3f": { "phone": phone, "countryShortName": "US" },
       "email_mm1jhb2c": { "email": email, "text": email },
-<<<<<<< HEAD
       "text_mm1jzzxb": message,
       "text_mm1jrvhd": situation
-=======
-      "text_mm1jzzxb": (situation ? "Situation: " + situation + "\n\n" : "") + (message || "")
->>>>>>> 7236a8b3a28e06b3ae3449c3556db42be283c8a2
     };
 
     const query = `mutation {
@@ -796,7 +792,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYzNDk3MjkwMiwiYWFpIjoxMSwidWlkIjo3ODcyNDc2NiwiaWFkIjoiMjAyNi0wMy0xOFQyMToyOToxMi44NzZaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MzA0ODk5NzMsInJnbiI6InVzZTEifQ.rG9hzWTWnjdVuQ7C4-UrE4t5YftzYwJ2q5I6DV7BlLo',
+          'Authorization': 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYzNDk3MjkwMiwiYWFpIjoxMSwidWlkIjo3ODcyNDc2NiwiaWFkIjoiMjAyNi0wMy0xOFQyMToyOToxMi4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MzA0ODk5NzMsInJnbiI6InVzZTEifQ.sguLEdKcLIm2PW6U5TRCY79nnKjiGhzEoY5EPYrZuJs',
           'API-Version': '2023-10'
         },
         body: JSON.stringify({ query })
