@@ -666,8 +666,44 @@
     <div class="section-label">// Get in touch</div>
     <h2 class="section-title" style="color:var(--off-white)">Let's build your network.</h2>
     <p class="section-sub" style="margin:16px auto 48px; max-width:500px">Tell us about your property and what you need. We'll get back to you within one business day.</p>
-    <div class="fade-in" style="border-radius:16px; overflow:hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.3);">
-      <iframe src="https://forms.ms/41eNQs0" width="100%" height="600" style="border:0; display:block;"></iframe>
+    <div class="contact-form fade-in">
+      <div class="form-row">
+        <div class="form-group">
+          <label>FIRST NAME</label>
+          <input type="text" id="f_first" placeholder="John" />
+        </div>
+        <div class="form-group">
+          <label>LAST NAME</label>
+          <input type="text" id="f_last" placeholder="Smith" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>EMAIL</label>
+          <input type="email" id="f_email" placeholder="john@example.com" />
+        </div>
+        <div class="form-group">
+          <label>PHONE</label>
+          <input type="tel" id="f_phone" placeholder="+1 (000) 000-0000" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>WHAT BEST DESCRIBES YOUR SITUATION?</label>
+        <select id="f_situation">
+          <option value="">Select one...</option>
+          <option>Home / Residential property</option>
+          <option>Multi-building estate or farm</option>
+          <option>Small business or office</option>
+          <option>Large commercial space</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>TELL US ABOUT YOUR PROJECT</label>
+        <textarea id="f_message" placeholder="Describe your property, current setup, pain points, or questions..."></textarea>
+      </div>
+      <div id="form-status" style="display:none; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:0.9rem; font-weight:500;"></div>
+      <button class="form-submit" id="f_submit" onclick="submitToMonday()">Send Message →</button>
     </div>
   </div>
 </section>
@@ -710,42 +746,44 @@
 
   // Monday.com form submission
   async function submitToMonday() {
-    const btn = document.getElementById('f_submit');
+    const btn    = document.getElementById('f_submit');
     const status = document.getElementById('form-status');
 
-    const first = document.getElementById('f_first').value.trim();
-    const last  = document.getElementById('f_last').value.trim();
-    const email = document.getElementById('f_email').value.trim();
-    const phone = document.getElementById('f_phone').value.trim();
+    const first     = document.getElementById('f_first').value.trim();
+    const last      = document.getElementById('f_last').value.trim();
+    const email     = document.getElementById('f_email').value.trim();
+    const phone     = document.getElementById('f_phone').value.trim();
     const situation = document.getElementById('f_situation').value;
-    const message = document.getElementById('f_message').value.trim();
+    const message   = document.getElementById('f_message').value.trim();
 
     if (!first || !email) {
       status.style.display = 'block';
       status.style.background = 'rgba(255,80,80,0.15)';
       status.style.color = '#ff6b6b';
-      status.textContent = 'Please enter your first name and email.';
+      status.textContent = 'Please enter at least your first name and email.';
       return;
     }
 
     btn.textContent = 'Sending...';
     btn.disabled = true;
+    status.style.display = 'none';
 
     const itemName = first + (last ? ' ' + last : '') + ' — Website Lead';
 
-    const columnValues = JSON.stringify({
+    const colVals = {
       "text_mm1jysc7": first,
       "text_mm1jarag": last,
       "phone_mm1jdp3f": { "phone": phone, "countryShortName": "US" },
       "email_mm1jhb2c": { "email": email, "text": email },
-      "text_mm1jzzxb": (situation ? "Situation: " + situation + "\n\n" : "") + (message || "")
-    });
+      "text_mm1jzzxb": message,
+      "text_mm1jrvhd": situation
+    };
 
     const query = `mutation {
-      create_item (
+      create_item(
         board_id: 18404534202,
         item_name: ${JSON.stringify(itemName)},
-        column_values: ${JSON.stringify(columnValues)}
+        column_values: ${JSON.stringify(JSON.stringify(colVals))}
       ) { id }
     }`;
 
@@ -762,24 +800,25 @@
 
       const data = await res.json();
 
+      console.log('Monday response:', JSON.stringify(data));
       if (data.data && data.data.create_item && data.data.create_item.id) {
         status.style.display = 'block';
         status.style.background = 'rgba(22,163,74,0.15)';
         status.style.color = '#4ade80';
-        status.textContent = "Message sent! We'll be in touch within one business day.";
+        status.textContent = "✓ Message sent! We’ll be in touch within one business day.";
         btn.textContent = 'Sent ✓';
         btn.style.background = '#16a34a';
-        // Clear fields
         ['f_first','f_last','f_email','f_phone','f_message'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('f_situation').selectedIndex = 0;
       } else {
-        throw new Error('Unexpected response');
+        console.error('Monday response:', JSON.stringify(data));
+        throw new Error('Bad response');
       }
     } catch(err) {
       status.style.display = 'block';
       status.style.background = 'rgba(255,80,80,0.15)';
       status.style.color = '#ff6b6b';
-      status.textContent = 'Something went wrong. Please email us directly at drew@kybernet.tech';
+      status.textContent = 'Something went wrong. Please email drew@kybernet.tech directly.';
       btn.textContent = 'Send Message →';
       btn.disabled = false;
     }
