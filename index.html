@@ -666,30 +666,30 @@
     <div class="section-label">// Get in touch</div>
     <h2 class="section-title" style="color:var(--off-white)">Let's build your network.</h2>
     <p class="section-sub" style="margin:16px auto 48px; max-width:500px">Tell us about your property and what you need. We'll get back to you within one business day.</p>
-    <form class="contact-form fade-in" action="https://formspree.io/f/drew@kybernet.tech" method="POST">
+    <div class="contact-form fade-in">
       <div class="form-row">
         <div class="form-group">
           <label>FIRST NAME</label>
-          <input type="text" name="first_name" placeholder="John" required />
+          <input type="text" id="f_first" placeholder="John" required />
         </div>
         <div class="form-group">
           <label>LAST NAME</label>
-          <input type="text" name="last_name" placeholder="Smith" />
+          <input type="text" id="f_last" placeholder="Smith" />
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label>EMAIL</label>
-          <input type="email" name="email" placeholder="john@example.com" required />
+          <input type="email" id="f_email" placeholder="john@example.com" required />
         </div>
         <div class="form-group">
           <label>PHONE</label>
-          <input type="tel" name="phone" placeholder="+1 (000) 000-0000" />
+          <input type="tel" id="f_phone" placeholder="+1 (000) 000-0000" />
         </div>
       </div>
       <div class="form-group">
         <label>WHAT BEST DESCRIBES YOUR SITUATION?</label>
-        <select name="situation">
+        <select id="f_situation">
           <option value="">Select one...</option>
           <option>Home / Residential property</option>
           <option>Multi-building estate or farm</option>
@@ -700,10 +700,11 @@
       </div>
       <div class="form-group">
         <label>TELL US ABOUT YOUR PROJECT</label>
-        <textarea name="message" placeholder="Describe your property, current setup, pain points, or questions..."></textarea>
+        <textarea id="f_message" placeholder="Describe your property, current setup, pain points, or questions..."></textarea>
       </div>
-      <button type="submit" class="form-submit">Send Message →</button>
-    </form>
+      <div id="form-status" style="display:none; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:0.9rem; font-weight:500;"></div>
+      <button class="form-submit" id="f_submit" onclick="submitToMonday()">Send Message →</button>
+    </div>
   </div>
 </section>
 
@@ -716,7 +717,7 @@
     <a href="#process">Process</a>
     <a href="#contact">Contact</a>
   </nav>
-  <div class="footer-copy">© 2025 Kybernet. All rights reserved.</div>
+  <div class="footer-copy">© 2026 Kybernet. All rights reserved.</div>
 </footer>
 
 <script>
