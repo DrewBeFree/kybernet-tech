@@ -770,9 +770,11 @@
     const itemName = first + (last ? ' ' + last : '') + ' — Website Lead';
 
     const columnValues = JSON.stringify({
-      "phone": { "phone": phone, "countryShortName": "US" },
-      "text": email,
-      "long_text": { "text": (situation ? "Situation: " + situation + "\n\n" : "") + (message || "") }
+      "text_mm1jysc7": first,
+      "text_mm1jarag": last,
+      "phone_mm1jdp3f": { "phone": phone, "countryShortName": "US" },
+      "email_mm1jhb2c": { "email": email, "text": email },
+      "text_mm1jzzxb": (situation ? "Situation: " + situation + "\n\n" : "") + (message || "")
     });
 
     const query = `mutation {
