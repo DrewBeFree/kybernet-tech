@@ -743,7 +743,81 @@
     a.addEventListener('click', () => document.getElementById('mainNav').classList.remove('open'));
   });
 
+  // Monday.com form submission
+  async function submitToMonday() {
+    const btn = document.getElementById('f_submit');
+    const status = document.getElementById('form-status');
 
+    const first = document.getElementById('f_first').value.trim();
+    const last  = document.getElementById('f_last').value.trim();
+    const email = document.getElementById('f_email').value.trim();
+    const phone = document.getElementById('f_phone').value.trim();
+    const situation = document.getElementById('f_situation').value;
+    const message = document.getElementById('f_message').value.trim();
+
+    if (!first || !email) {
+      status.style.display = 'block';
+      status.style.background = 'rgba(255,80,80,0.15)';
+      status.style.color = '#ff6b6b';
+      status.textContent = 'Please enter your first name and email.';
+      return;
+    }
+
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    const itemName = first + (last ? ' ' + last : '') + ' — Website Lead';
+
+    const columnValues = JSON.stringify({
+      "phone": { "phone": phone, "countryShortName": "US" },
+      "text": email,
+      "long_text": { "text": (situation ? "Situation: " + situation + "\n\n" : "") + (message || "") }
+    });
+
+    const query = `mutation {
+      create_item (
+        board_id: 18404534202,
+        group_id: "topics",
+        item_name: ${JSON.stringify(itemName)},
+        column_values: ${JSON.stringify(columnValues)}
+      ) { id }
+    }`;
+
+    try {
+      const res = await fetch('https://api.monday.com/v2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYzNDk3MjkwMiwiYWFpIjoxMSwidWlkIjo3ODcyNDc2NiwiaWFkIjoiMjAyNi0wMy0xOFQyMToyOToxMi44NzZaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MzA0ODk5NzMsInJnbiI6InVzZTEifQ.rG9hzWTWnjdVuQ7C4-UrE4t5YftzYwJ2q5I6DV7BlLo',
+          'API-Version': '2023-10'
+        },
+        body: JSON.stringify({ query })
+      });
+
+      const data = await res.json();
+
+      if (data.data && data.data.create_item && data.data.create_item.id) {
+        status.style.display = 'block';
+        status.style.background = 'rgba(22,163,74,0.15)';
+        status.style.color = '#4ade80';
+        status.textContent = "Message sent! We'll be in touch within one business day.";
+        btn.textContent = 'Sent ✓';
+        btn.style.background = '#16a34a';
+        // Clear fields
+        ['f_first','f_last','f_email','f_phone','f_message'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('f_situation').selectedIndex = 0;
+      } else {
+        throw new Error('Unexpected response');
+      }
+    } catch(err) {
+      status.style.display = 'block';
+      status.style.background = 'rgba(255,80,80,0.15)';
+      status.style.color = '#ff6b6b';
+      status.textContent = 'Something went wrong. Please email us directly at drew@kybernet.tech';
+      btn.textContent = 'Send Message →';
+      btn.disabled = false;
+    }
+  }
 </script>
 </body>
 </html>
